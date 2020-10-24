@@ -1,11 +1,14 @@
 package pre.task.traffic.info.controller;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,7 +42,9 @@ class InfoControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(infoController).build();
         
         Map<String, String> map = new HashMap<String, String>();
-        map.put("dataPath", "/data/seoul.csv");
+        ClassPathResource resource = new ClassPathResource("data/seoul.csv");
+		Path path = Paths.get(resource.getURI());
+        map.put("dataPath", path.toString());
         String content = objectMapper.writeValueAsString(map);
         
         mockMvc.perform(MockMvcRequestBuilders.post("/info/insertTrafficData").contentType(MediaType.APPLICATION_JSON).content(content))

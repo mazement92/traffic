@@ -2,12 +2,15 @@ package pre.task.traffic.info.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 
 import pre.task.traffic.info.dto.StationInfoDto;
 
@@ -20,8 +23,10 @@ class InfoServiceTest {
     @Test
     void insertTrafficData() throws Exception {    	
         int result = 0;
+        ClassPathResource resource = new ClassPathResource("data/seoul.csv");
 		try {
-			result = infoService.insertTrafficData("/data/seoul.csv");
+			Path path = Paths.get(resource.getURI());
+			result = infoService.insertTrafficData(path.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

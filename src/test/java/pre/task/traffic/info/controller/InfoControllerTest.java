@@ -39,7 +39,7 @@ class InfoControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(infoController).build();
         
         Map<String, String> map = new HashMap<String, String>();
-        map.put("dataPath", "/data/서울교통공사_승하차인원_20191231.csv");
+        map.put("dataPath", "/data/seoul.csv");
         String content = objectMapper.writeValueAsString(map);
         
         mockMvc.perform(MockMvcRequestBuilders.post("/info/insertTrafficData").contentType(MediaType.APPLICATION_JSON).content(content))

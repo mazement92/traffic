@@ -21,7 +21,7 @@ class InfoServiceTest {
     void insertTrafficData() throws Exception {    	
         int result = 0;
 		try {
-			result = infoService.insertTrafficData("/data/서울교통공사_승하차인원_20191231.csv");
+			result = infoService.insertTrafficData("/data/seoul.csv");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

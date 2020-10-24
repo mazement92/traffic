@@ -19,8 +19,7 @@ public class TokenService {
 	 * @return String
 	 * @throws Exception
 	 */
-	public String createToken(MemberDto memberDto, String memberPwd) throws Exception {		
-		/* 토큰 생성 */
+	public String createToken(MemberDto memberDto, String memberPwd) throws Exception {
 		try {
 	        SignatureAlgorithm  signatureAlgorithm= SignatureAlgorithm.HS256;
 	        JwtBuilder builder = Jwts.builder()

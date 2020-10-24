@@ -41,8 +41,8 @@ function insertTrafficData() {
 	}).done(function(data) {
 		alert(data.msg);
 		location.reload();
-    }).fail(function(data) {
-    	alert("데이터 입력에 실패하였습니다.");
+    }).fail(function(request, status, error) {
+    	alert(request.responseText);
     });
 }
 
@@ -60,12 +60,20 @@ function logout() {
 }
 
 function ajaxDailyAvg() {
+	$('#dailyAvgArea').empty();
 	$.ajax({
 		url: "/info/ajaxDailyAvg",
-		dataType: "html",
+		contentType: "application/json",
+		dataType: "json",
         type: "GET"
 	}).done(function(data) {
-		$("#dailyAvgArea").html(data);
+		if(jQuery.isEmptyObject(data)) {
+			$("#dailyAvgArea").html("조회된 데이터가 없습니다.");
+		} else {
+			$.each(data, function(i, d) {
+				$("#dailyAvgArea").append(i+1 + ". 역명 : " + d.stationName + ", 인원 수 : " + d.dailyAvgUser + "</br>");
+			});
+		}
     }).fail(function(data) {
     	alert("데이터 조회에 실패하였습니다.");
     });
@@ -74,10 +82,15 @@ function ajaxDailyAvg() {
 function ajaxMonthlyAvg() {
 	$.ajax({
 		url: "/info/ajaxMonthlyAvg",
-		dataType: "html",
+		contentType: "application/json",
+		dataType: "json",
         type: "GET"
 	}).done(function(data) {
-		$("#monthlyAvgArea").html(data);
+		if(jQuery.isEmptyObject(data)) {
+			$("#monthlyAvgArea").html("조회된 데이터가 없습니다.");
+		} else {
+			$("#monthlyAvgArea").html("역명: " + data.stationName + ", 인원 수 : " + data.monthlyAvgUser);
+		}
     }).fail(function(data) {
     	alert("데이터 조회에 실패하였습니다.");
     });
@@ -86,10 +99,15 @@ function ajaxMonthlyAvg() {
 function ajaxMaxDiff() {
 	$.ajax({
 		url: "/info/ajaxMaxDiff",
-		dataType: "html",
+		contentType: "application/json",
+		dataType: "json",
         type: "GET"
 	}).done(function(data) {
-		$("#maxDiffArea").html(data);
+		if(jQuery.isEmptyObject(data)) {
+			$("#maxDiffArea").html("조회된 데이터가 없습니다.");
+		} else {
+			$("#maxDiffArea").html("역명: " + data.stationName);
+		}
     }).fail(function(data) {
     	alert("데이터 조회에 실패하였습니다.");
     });

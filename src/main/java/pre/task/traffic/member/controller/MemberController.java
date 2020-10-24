@@ -23,29 +23,46 @@ public class MemberController {
 		
 	/**
 	 * 회원 가입
+	 * @param request HttpServletRequest
 	 * @param memberDto MemberDto
 	 * @return Map<String, Object>
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/insertMember", method=RequestMethod.POST) 
-	public @ResponseBody Map<String, Object> insertMember(@RequestBody MemberDto memberDto) {
+	public @ResponseBody Map<String, Object> insertMember(HttpSession session, @RequestBody MemberDto memberDto) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if(session.getAttribute("token") != null) {
+			throw new Exception("로그인 상태에선 회원 가입을 진행할 수 없습니다.");
+		}
+		
+		if(memberDto.getMemberId().length() > 10 || memberDto.getMemberPwd().length() > 10) {
+			throw new Exception("ID와 PW는 10자 이내로 입력해주세요.");
+		}
+		
 		try {
 			memberService.insertMember(memberDto);
 			resultMap.put("msg", "회원가입이 완료되었습니다.");
 		} catch(Exception e) {
-			resultMap.put("msg", "회원가입에 실패하였습니다. " + e.getMessage());
 			e.printStackTrace();
+			throw new Exception("회원가입에 실패하였습니다. " + e.getMessage());
 		}
 		return resultMap;
 	}
 	
 	/**
 	 * 로그인, 토큰 생성
+	 * @param session HttpSession
 	 * @param memberDto MemberDto
 	 * @return Map<String, Object>
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/login" , method=RequestMethod.POST) 
-	public @ResponseBody Map<String, Object> login(HttpSession session, @RequestBody MemberDto memberDto) {
+	public @ResponseBody Map<String, Object> login(HttpSession session, @RequestBody MemberDto memberDto) throws Exception {
+		if(session.getAttribute("token") != null) {
+			throw new Exception("이미 로그인된 상태입니다.");
+		}
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String token = memberService.getMemberInfo(memberDto);
@@ -53,25 +70,26 @@ public class MemberController {
 			session.setMaxInactiveInterval(1800);
 			resultMap.put("msg", "환영합니다");
 		} catch(Exception e) {
-			resultMap.put("msg", "로그인에 실패하였습니다. " + e.getMessage());
 			e.printStackTrace();
+			throw new Exception("로그인에 실패하였습니다. " + e.getMessage());
 		}
 		return resultMap;
 	}
 	
 	/**
 	 * 로그아웃, 토큰 제거
-	 * @param memberDto MemberDto
+	 * @param session HttpSession
 	 * @return Map<String, Object>
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/logout" , method=RequestMethod.POST) 
-	public @ResponseBody Map<String, Object> logout(HttpSession session) {
+	public @ResponseBody Map<String, Object> logout(HttpSession session) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			session.removeAttribute("token");
 		} catch(Exception e) {
-			resultMap.put("msg", "로그아웃에 실패하였습니다. " + e.getMessage());
 			e.printStackTrace();
+			throw new Exception("로그아웃에 실패하였습니다. " + e.getMessage());
 		}
 		return resultMap;
 	}

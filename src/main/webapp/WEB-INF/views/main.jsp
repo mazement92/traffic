@@ -30,8 +30,8 @@ function login() {
 		}).done(function(data) {
 			alert(data.msg);
 			$(location).attr("href", "info/infoMain");
-	    }).fail(function(data) {
-	    	alert("로그인에 실패하였습니다.");
+	    }).fail(function(request, status, error) {
+	    	alert(request.responseText);
 	    });
 	} else {
 		return false;
@@ -53,8 +53,8 @@ function regist() {
 			alert(data.msg);
 			$("#mbrId").val("");
 			$("#mbrPwd").val("");
-	    }).fail(function(data) {
-	    	alert("회원가입에 실패하였습니다.");
+	    }).fail(function(request, status, error) {
+	    	alert(request.responseText);
 			$("#mbrId").val("");
 			$("#mbrPwd").val("");
 	    });

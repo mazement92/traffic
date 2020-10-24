@@ -24,6 +24,7 @@ public class MemberService {
 	 */
 	public void insertMember(MemberDto memberDto) throws Exception {
 		try {
+			// PW 암호화
 			String encryptPwd = this.getEncryptMemberPwd(memberDto.getMemberPwd());
             memberDto.setMemberPwd(encryptPwd);
             memberDao.insertMember(memberDto);
@@ -36,19 +37,21 @@ public class MemberService {
 	}
 	
 	/**
-	 * 로그인 정보 조회
+	 * 로그인 회원 정보 검증
 	 * @param memberDto MemberDto
 	 * @return String
 	 * @throws Exception
 	 */
 	public String getMemberInfo(MemberDto memberDto) throws Exception {
 		try {
+			// DB에 저장된 암호와 대조하여 로그인 정보 확인
 			String memberPwd = memberDao.selectMemberInfo(memberDto);
-			/* 로그인 정보 확인 */
 			String encryptPwd = this.getEncryptMemberPwd(memberDto.getMemberPwd());
 			if(!memberPwd.equals(encryptPwd)) {
 				throw new Exception("암호가 일치하지 않습니다.");
 			}
+			
+			// 토큰 생성
 			String token = tokenService.createToken(memberDto, memberPwd);
 			return token;
 		} catch(NullPointerException ne) {

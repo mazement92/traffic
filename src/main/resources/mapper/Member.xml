@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pre.task.traffic.member.dao.mapper.Member">
+	<insert id="insertMember" parameterType="pre.task.traffic.member.dto.MemberDto">
+		INSERT INTO MEMBER (
+			MEMBER_ID,
+			MEMBER_PWD,
+			REG_DTS
+		)
+		VALUES (
+			#{memberId},
+			#{memberPwd},
+			SYSDATE
+		)
+	</insert>
+	
+	<select id="selectMemberInfo" parameterType="pre.task.traffic.member.dto.MemberDto" resultType="String">
+		SELECT	M.MEMBER_PWD
+		FROM	MEMBER M
+		WHERE	M.MEMBER_ID = #{memberId}
+	</select>
+</mapper>

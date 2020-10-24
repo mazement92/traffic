@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pre.task.traffic.info.dao.mapper.Info">
+	<insert id="insertTrafficStationData" parameterType="pre.task.traffic.info.dto.StationInfoDto">
+		INSERT INTO STATION (
+			STATION_ID,
+			STATION_NAME,
+			REG_DTS
+		)
+		VALUES (
+			#{stationId},
+			#{stationName},
+			SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertTrafficMonthlyUserData" parameterType="pre.task.traffic.info.dto.StationInfoDto">
+		INSERT INTO MONTHLY_STATION (
+			MONTH,
+			STATION_ID,
+			MONTHLY_STATION_USER,
+			REG_DTS
+		)
+		VALUES (
+			#{month},
+			#{stationId},
+			#{monthlyStationUser},
+			SYSDATE
+		)
+	</insert>
+	
+	<select id="selectDailyAvgStationUser" resultType="pre.task.traffic.info.dto.StationInfoDto">
+		SELECT 	S.STATION_NAME
+			  , A.DAILY_AVG_USER
+		FROM 	(
+					SELECT 	MS.STATION_ID
+						  , SUM(MS.MONTHLY_STATION_USER)/365 AS DAILY_AVG_USER
+					FROM 	MONTHLY_STATION MS
+					GROUP BY
+							MS.STATION_ID
+					ORDER BY
+							DAILY_AVG_USER DESC
+				) A
+			  , STATION S
+		WHERE 	A.STATION_ID 	=  S.STATION_ID
+		AND 	ROWNUM 			&lt;= 10
+	</select>
+	
+	<select id="selectMonthlyAvgStationUser" resultType="pre.task.traffic.info.dto.StationInfoDto">
+		SELECT 	S.STATION_NAME
+			  , A.MONTHLY_AVG_USER
+		FROM 	(
+					SELECT 	MS.STATION_ID
+						  , AVG(MS.MONTHLY_STATION_USER) AS MONTHLY_AVG_USER
+					FROM 	MONTHLY_STATION MS
+					GROUP BY
+							MS.STATION_ID
+					ORDER BY
+							MONTHLY_AVG_USER ASC
+				) A
+			  , STATION S
+		WHERE 	A.STATION_ID 	=  S.STATION_ID
+		AND 	ROWNUM 			&lt;= 1
+	</select>
+	
+	<select id="selectMaxDiffStationUser" resultType="pre.task.traffic.info.dto.StationInfoDto">
+		SELECT	S.STATION_NAME
+		FROM	(
+					SELECT 	MS.STATION_ID
+						  , (MAX(MONTHLY_STATION_USER) - MIN(MONTHLY_STATION_USER)) DIFF
+					FROM 	MONTHLY_STATION MS
+					GROUP BY
+							MS.STATION_ID
+					ORDER BY
+							DIFF DESC
+				) A
+			  , STATION S
+		WHERE	A.STATION_ID 	= S.STATION_ID
+		AND		ROWNUM 			&lt;= 1
+	</select>
+</mapper>

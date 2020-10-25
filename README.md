@@ -11,7 +11,7 @@
 1. java와 git 설치
 2. download zip을 통해 다운로드 후 압축풀기 혹은 cmd 실행 후 [git clone git@github.com:mazement92/traffic.git] 명령을 통해 git clone, 
 3. ./gradlew clean build 명령 실행시 ./build/libs 폴더에 traffic-0.0.1-SNAPSHOT.war 파일 생성
-4. ./build/libs java -jar traffic-0.0.1-SNAPSHOT.war 명령으로 실행
+4. ./build/libs 디렉토리에서 [java -jar traffic-0.0.1-SNAPSHOT.war] 명령으로 실행
 5. 웹 브라우저를 통해 localhost:8080 접속 - 기본 회원가입/로그인 페이지
 
 ## 요구사항 및 가산점 
